@@ -10,6 +10,7 @@ import android.widget.SeekBar;
 import android.os.Handler;
 
 import java.lang.Runnable;
+import java.lang.Math;
 
 import java.util.Random;
 
@@ -52,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
             @Override
             public void run(){
                 moveSeekBar();
-                handler.postDelayed(this,1000);
+                handler.postDelayed(this,20);
             }
         };
         handler.post(r);
@@ -110,12 +111,25 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
 
     private void moveSeekBar(){
 
-        SeekBar seekBarX = findViewById(R.id.seekbar_x);
-//        SeekBar seekBarY = findViewById(R.id.seekbar_y);
-//        SeekBar seekBarZ = findViewById(R.id.seekbar_z);
-        int currentProgress = seekBarX.getProgress();
-        int nextProgress = (currentProgress + 45)  % MAX_PROGRESS;
-        seekBarX.setProgress(nextProgress);
+        SeekBar seekbar;
+        Random axisRandom = new Random();
+        int nextAxisRnd = Math.abs(axisRandom.nextInt()) % 3;
+        switch (nextAxisRnd){
+            case 0:
+                seekbar = findViewById(R.id.seekbar_x);
+                break;
+            case 1:
+                seekbar = findViewById(R.id.seekbar_y);
+                break;
+            case 2:
+                seekbar = findViewById(R.id.seekbar_z);
+                break;
+            default:
+                seekbar =findViewById(R.id.seekbar_x);
+        }
+        int currentProgress = seekbar.getProgress();
+        int nextProgress = (currentProgress + 1)  % MAX_PROGRESS;
+        seekbar.setProgress(nextProgress);
     }
 
     @Override
