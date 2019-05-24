@@ -7,9 +7,16 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.SeekBar;
+import android.os.Handler;
+
+import java.lang.Runnable;
+
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener {
     private final static String TAG = MainActivity.class.getSimpleName();
+
+    private final int MAX_PROGRESS = 360;
 
     private GLSurfaceView glView;
     private SimpleRenderer renderer;
@@ -27,9 +34,9 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
         SeekBar seekBarX = findViewById(R.id.seekbar_x);
         SeekBar seekBarY = findViewById(R.id.seekbar_y);
         SeekBar seekBarZ = findViewById(R.id.seekbar_z);
-        seekBarX.setMax(360);
-        seekBarY.setMax(360);
-        seekBarZ.setMax(360);
+        seekBarX.setMax(MAX_PROGRESS);
+        seekBarY.setMax(MAX_PROGRESS);
+        seekBarZ.setMax(MAX_PROGRESS);
         seekBarX.setOnSeekBarChangeListener(this);
         seekBarY.setOnSeekBarChangeListener(this);
         seekBarZ.setOnSeekBarChangeListener(this);
@@ -39,6 +46,16 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
         pyramid = new Pyramid();
         renderer.setObj(cube);
         glView.setRenderer(renderer);
+
+        final Handler handler = new Handler();
+        final Runnable r = new Runnable(){
+            @Override
+            public void run(){
+                moveSeekBar();
+                handler.postDelayed(this,1000);
+            }
+        };
+        handler.post(r);
     }
 
     @Override
@@ -89,6 +106,16 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
             renderer.rotateObjZ(progress);
             break;
         }
+    }
+
+    private void moveSeekBar(){
+
+        SeekBar seekBarX = findViewById(R.id.seekbar_x);
+//        SeekBar seekBarY = findViewById(R.id.seekbar_y);
+//        SeekBar seekBarZ = findViewById(R.id.seekbar_z);
+        int currentProgress = seekBarX.getProgress();
+        int nextProgress = (currentProgress + 45)  % MAX_PROGRESS;
+        seekBarX.setProgress(nextProgress);
     }
 
     @Override
